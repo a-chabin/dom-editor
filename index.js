@@ -26,7 +26,7 @@ fs.watch(INPUT_DIR, { persistent: true }, () => {
             ? window.document.body.innerHTML
             : window.document.documentElement.outerHTML;
 
-        fs.writeFileSync(OUTPUT_DIR + RESULT_FILENAME, resultHTML);
+        fs.writeFileSync(OUTPUT_DIR + RESULT_FILENAME, htmlBeautify(resultHTML));
         console.log('Transformed!');
     } catch (e) {
         console.error(e);
