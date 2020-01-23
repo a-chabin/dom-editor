@@ -2,6 +2,7 @@
 
 Easy way to edit HTML using DOM API (cheerio, jsdom)
 
+![demo](https://s5.gifyu.com/images/456e814060d04029981.gif)
 
 ## Using
 
