@@ -17,13 +17,13 @@ let $ = null;
 let resultHTML = null;
 
 fs.watch(INPUT_DIR, { persistent: true }, () => {
-    const html = fs.readFileSync(INPUT_DIR + HTML_FILENAME).toString();
+    let html = fs.readFileSync(INPUT_DIR + HTML_FILENAME).toString();
+    html = preserveTags(html);
     const DOMScript = fs.readFileSync(INPUT_DIR + DOM_SCRIPT_FILENAME).toString();
 
     try {
         if (isJQuery) {
-            const $ = cheerio.load(html, {
-                withDomLvl1: isFragment,
+            $ = cheerio.load(html, {
                 decodeEntities: false
             });
             eval(DOMScript);
@@ -40,9 +40,23 @@ fs.watch(INPUT_DIR, { persistent: true }, () => {
                 : window.document.documentElement.outerHTML;
         }
 
+        resultHTML = rollBackTags(resultHTML);
+
         fs.writeFileSync(OUTPUT_DIR + RESULT_FILENAME, htmlBeautify(resultHTML));
         console.log('Transformed!');
     } catch (e) {
         console.error(e);
     }
 });
+
+function preserveTags(html) {
+    return html
+        .replace(/script/g, 'preserve-script')
+        .replace(/style/g, 'preserve-style');
+}
+
+function rollBackTags(html) {
+    return html
+        .replace(/preserve-script/g, 'script')
+        .replace(/preserve-style/g, 'style');
+}
